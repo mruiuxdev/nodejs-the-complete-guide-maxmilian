@@ -1,0 +1,46 @@
+<html lang="en">
+  <%- include('../includes/head.ejs') %>
+  <body>
+    <%- include('../includes/menu.ejs') %>
+    <div class="container py-5">
+      <% if (orders.length <= 0) { %>
+      <h1>No Orders</h1>
+      <% } else { %>
+      <ol class="list-group">
+        <% orders.forEach(order => { %>
+        <li class="list-group-item d-flex gap-1">
+          <div class="h4 fw-bold">#<%= order.id %></div>
+          <% order.products.forEach(product => { %>
+          <div class="d-flex justify-content-between w-100">
+            <div class="d-flex gap-2">
+              <img
+                src="<%= product.imageUrl %>"
+                alt="<%= product.title %>"
+                width="60"
+                height="60"
+                class="rounded object-fit-cover"
+              />
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">
+                  <a href="/shop/product-details/<%= product.id %>">
+                    <%= product.title %>
+                  </a>
+                </div>
+                <%= product.description %>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge text-bg-primary rounded-pill"
+                ><%= product.orderItem.quantity %></span
+              >
+            </div>
+          </div>
+          <% }) %>
+        </li>
+        <% }) %>
+      </ol>
+      <% } %>
+    </div>
+    <%- include('../includes/end') %>
+  </body>
+</html>

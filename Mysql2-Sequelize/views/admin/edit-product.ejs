@@ -1,0 +1,72 @@
+<html lang="en">
+  <%- include('../includes/head.ejs') %>
+  <body>
+    <%- include('../includes/menu.ejs') %>
+    <div class="container py-5">
+      <form
+        action="/admin/<%if (edit) { %>edit-product<% } else { %>add-product<% } %>"
+        method="POST"
+      >
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="title" class="form-label">Title</label>
+              <input
+                type="text"
+                name="title"
+                id="title"
+                value="<% if (edit) { %><%= product.title %><% } %>"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="price" class="form-label">Price</label>
+              <input
+                type="number"
+                name="price"
+                id="price"
+                step="0.01"
+                value="<% if (edit) { %><%= product.price %><% } %>"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-12 mb-3">
+            <div class="form-group">
+              <label for="imageUrl" class="form-label">ImageUrl</label>
+              <input
+                type="text"
+                name="imageUrl"
+                id="imageUrl"
+                value="<% if (edit) { %><%= product.imageUrl %><% } %>"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mb-3">
+          <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              rows="3"
+              name="description"
+              id="description"
+              class="form-control"
+            >
+<% if (edit) { %><%= product.description %><% } %></textarea
+            >
+          </div>
+        </div>
+        <% if (edit) { %>
+        <input type="hidden" name="productId" value="<%= product.id %>" />
+        <% } %>
+        <button type="submit" class="btn btn-primary mt-4">
+          <%= edit ? "Update" : "Add" %> Product
+        </button>
+      </form>
+    </div>
+    <%- include('../includes/end') %>
+  </body>
+</html>

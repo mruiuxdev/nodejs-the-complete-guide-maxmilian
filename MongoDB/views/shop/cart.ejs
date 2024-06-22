@@ -1,0 +1,58 @@
+<html lang="en">
+  <%- include('../includes/head.ejs') %>
+  <body>
+    <%- include('../includes/menu.ejs') %>
+    <div class="container py-5">
+      <% if (products?.length > 0) { %>
+      <ol class="list-group">
+        <% products?.forEach(product => { %>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-start"
+        >
+          <div class="d-flex gap-2">
+            <img
+              src="<%= product?.imageUrl %>"
+              alt="<%= product?.title %>"
+              width="60"
+              height="60"
+              class="rounded object-fit-cover"
+            />
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">
+                <a href="/shop/product-details/<%= product?._id %>">
+                  <%= product?.title %>
+                </a>
+              </div>
+              <%= product?.description %>
+            </div>
+          </div>
+          <div class="d-flex flex-column gap-2">
+            <div class="text-end">
+              <span class="badge text-bg-primary rounded-pill"
+                ><%= product?.quantity %></span
+              >
+            </div>
+            <form action="/shop/delete-cart" method="post">
+              <input
+                type="hidden"
+                name="productId"
+                value="<%= product?._id %>"
+              />
+              <button class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </li>
+        <% }) %>
+      </ol>
+      <div class="text-end mt-3">
+        <form action="/shop/create-orders" method="post">
+          <button type="submit" class="btn btn-primary">Order Now!!</button>
+        </form>
+      </div>
+      <% } else { %>
+      <h1>No Cart</h1>
+      <% } %>
+    </div>
+    <%- include('../includes/end') %>
+  </body>
+</html>

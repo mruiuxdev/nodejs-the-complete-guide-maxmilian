@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../includes/head.ejs') %>
+  <body>
+    <%- include('../includes/menu.ejs') %>
+    <div class="container py-5">
+      <% if (products?.length > 0) { %>
+      <h1 class="mb-5">Products</h1>
+      <div class="row">
+        <% products.forEach(product => { %>
+        <div class="col-lg-4 col-md-6">
+          <div class="card">
+            <img
+              class="card-img-top w-100 object-fit-cover"
+              height="350"
+              src="<%=
+              product?.imageUrl %>"
+              alt="<%= product?.title %>"
+            />
+            <div class="card-body">
+              <h5 class="card-title"><%= product?.title %></h5>
+              <p class="card-description"><%= product?.description %></p>
+              <p class="card-description h3 text-success fw-bold">
+                <strong>$<%= product?.price %></strong>
+              </p>
+              <div class="row">
+                <div class="col-md-6">
+                  <a
+                    href="/admin/edit-product/<%= product.id %>?edit=true"
+                    class="btn btn-warning w-100"
+                    >Edit</a
+                  >
+                </div>
+                <div class="col-md-6">
+                  <form action="/admin/delete-product" method="post">
+                    <input
+                      type="hidden"
+                      name="productId"
+                      value="<%= product.id %>"
+                    />
+                    <button class="btn btn-outline-danger w-100" type="submit">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } else { %>
+      <h1>No products</h1>
+      <% } %>
+    </div>
+    <%- include('../includes/end.ejs') %>
+  </body>
+</html>
