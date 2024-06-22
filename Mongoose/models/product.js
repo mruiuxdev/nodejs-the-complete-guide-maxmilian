@@ -8,6 +8,7 @@ const productSchema = new Schema(
     price: { type: Number, require: true },
     description: { type: String, require: true },
     imageUrl: { type: String, require: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true, timeseries: true }
 );

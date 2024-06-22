@@ -18,15 +18,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  // User.fetchById("6674141b038d8ff08a2e9ef1")
-  //   .then((user) => {
-  //     req.user = new User(user._id, user.username, user.email, user.cart);
+  User.findById("6676c11618f2ca4d1b17f062")
+    .then((user) => {
+      req.user = user;
 
-  //     next();
-  //   })
-  //   .catch((err) => console.log(err));
-
-  next();
+      next();
+    })
+    .catch((err) => console.log(err));
 });
 
 app.use(adminRoutes);
@@ -38,6 +36,19 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Database connected");
+
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          username: "mruiux",
+          email: "mruiux@dev.com",
+          cart: { items: [] },
+        });
+
+        user.save();
+      }
+    });
+
     app.listen(3000, () => console.log("Server is running"));
   })
   .catch((err) => console.log(err));
