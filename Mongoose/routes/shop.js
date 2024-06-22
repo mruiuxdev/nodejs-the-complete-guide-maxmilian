@@ -15,11 +15,11 @@ router.get("/", getAllProducts);
 
 router.get("/shop/product-details/:productId", getProductDetails);
 
-// router.get("/shop/cart", getCart);
-// router.post("/shop/cart", postCart);
-// router.post("/shop/delete-cart", deleteCart);
+router.get("/shop/cart", getCart);
+router.post("/shop/cart", postCart);
+router.post("/shop/delete-cart", deleteCart);
 
-// router.get("/shop/orders", getOrders);
-// router.post("/shop/create-orders", postOrders);
+router.get("/shop/orders", getOrders);
+router.post("/shop/create-orders", postOrders);
 
 module.exports = router;

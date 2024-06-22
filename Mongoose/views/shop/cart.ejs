@@ -11,19 +11,19 @@
         >
           <div class="d-flex gap-2">
             <img
-              src="<%= product?.imageUrl %>"
-              alt="<%= product?.title %>"
+              src="<%= product?.productId?.imageUrl %>"
+              alt="<%= product?.productId?.title %>"
               width="60"
               height="60"
               class="rounded object-fit-cover"
             />
             <div class="ms-2 me-auto">
               <div class="fw-bold">
-                <a href="/shop/product-details/<%= product?._id %>">
-                  <%= product?.title %>
+                <a href="/shop/product-details/<%= product?.productId?._id %>">
+                  <%= product?.productId?.title %>
                 </a>
               </div>
-              <%= product?.description %>
+              <%= product?.productId?.description %>
             </div>
           </div>
           <div class="d-flex flex-column gap-2">
@@ -36,7 +36,7 @@
               <input
                 type="hidden"
                 name="productId"
-                value="<%= product?._id %>"
+                value="<%= product?.productId?._id %>"
               />
               <button class="btn btn-outline-danger btn-sm">Delete</button>
             </form>

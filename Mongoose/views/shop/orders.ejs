@@ -10,29 +10,29 @@
         <% orders.forEach(order => { %>
         <li class="list-group-item d-flex flex-column gap-1">
           <div class="h4 fw-bold">#<%= order._id %></div>
-          <% order.items.forEach(product => { %>
+          <% order.products.forEach((product) => { %>
           <div class="d-flex justify-content-between w-100">
             <div class="d-flex gap-2">
               <img
-                src="<%= product.imageUrl %>"
-                alt="<%= product.title %>"
+                src="<%= product?.product.imageUrl %>"
+                alt="<%= product?.product.title %>"
                 width="60"
                 height="60"
                 class="rounded object-fit-cover"
               />
               <div class="ms-2 me-auto">
                 <div class="fw-bold">
-                  <a href="/shop/product-details/<%= product._id %>">
-                    <%= product.title %>
+                  <a href="/shop/product-details/<%= product?.product._id %>">
+                    <%= product?.product.title %>
                   </a>
                 </div>
-                <%= product.description %>
+                <%= product?.product.description %>
               </div>
             </div>
             <div class="text-end">
-              <span class="badge text-bg-primary rounded-pill"
-                ><%= product.quantity %></span
-              >
+              <span class="badge text-bg-primary rounded-pill">
+                <%= product.quantity %>
+              </span>
             </div>
           </div>
           <% }) %>
