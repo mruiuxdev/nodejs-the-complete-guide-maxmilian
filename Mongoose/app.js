@@ -9,6 +9,7 @@ const User = require("./models/user");
 const dotenv = require("dotenv");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ const store = new MongoDBStore({
   uri: process.env.MONGO_URI,
   collection: "sessions",
 });
+
+const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -34,6 +37,8 @@ app.use(
   })
 );
 
+app.use(csrfProtection);
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -48,6 +53,13 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+
+  next();
+});
+
 app.use(adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
@@ -58,18 +70,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Database connected");
-
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          username: "mruiux",
-          email: "mruiux@dev.com",
-          cart: { items: [] },
-        });
-
-        user.save();
-      }
-    });
 
     app.listen(3000, () => console.log("Server is running"));
   })

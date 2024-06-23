@@ -55,9 +55,13 @@
         <li class="nav-item">
           <a class="btn btn-primary" href="/auth/login">Login</a>
         </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-primary ms-3" href="/auth/signup">Signup</a>
+        </li>
         <% } else { %>
         <li class="nav-item">
           <form action="/auth/logout" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn btn-outline-danger" type="submit">Logout</button>
           </form>
         </li>

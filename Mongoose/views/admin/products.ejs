@@ -38,6 +38,11 @@
                       name="productId"
                       value="<%= product?._id %>"
                     />
+                    <input
+                      type="hidden"
+                      name="_csrf"
+                      value="<%= csrfToken %>"
+                    />
                     <button class="btn btn-outline-danger w-100" type="submit">
                       Delete
                     </button>

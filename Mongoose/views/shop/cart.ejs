@@ -38,6 +38,7 @@
                 name="productId"
                 value="<%= product?.productId?._id %>"
               />
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button class="btn btn-outline-danger btn-sm">Delete</button>
             </form>
           </div>
@@ -46,6 +47,7 @@
       </ol>
       <div class="text-end mt-3">
         <form action="/shop/create-orders" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <button type="submit" class="btn btn-primary">Order Now!!</button>
         </form>
       </div>
