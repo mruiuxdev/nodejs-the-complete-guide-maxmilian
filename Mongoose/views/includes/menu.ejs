@@ -19,6 +19,7 @@
             >Shop</a
           >
         </li>
+        <% if (isAuthenticated) { %>
         <li class="nav-item">
           <a
             class="nav-link <%= path === '/shop/cart' ? 'active' : '' %>"
@@ -47,6 +48,20 @@
             >Admin Products</a
           >
         </li>
+        <% } %>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <% if (!isAuthenticated) { %>
+        <li class="nav-item">
+          <a class="btn btn-primary" href="/auth/login">Login</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <form action="/auth/logout" method="post">
+            <button class="btn btn-outline-danger" type="submit">Logout</button>
+          </form>
+        </li>
+        <% } %>
       </ul>
     </div>
   </div>

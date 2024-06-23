@@ -15,7 +15,9 @@
           <strong>$<%= product.price %></strong>
         </div>
       </div>
-      <div class="col-md-6">
+      <div
+        class="<% if (isAuthenticated) { %> col-md-6 <% } else { %> col-12 <% } %>"
+      >
         <a
           href="/shop/product-details/<%= product._id %>"
           class="btn btn-info mt-3 w-100"
@@ -23,9 +25,11 @@
           Details
         </a>
       </div>
+      <% if (isAuthenticated) { %>
       <div class="col-md-6">
         <%- include('../includes/add-to-cart.ejs', {product}) %>
       </div>
+      <% } %>
     </div>
   </div>
 </div>

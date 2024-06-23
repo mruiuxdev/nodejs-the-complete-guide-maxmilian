@@ -10,6 +10,7 @@ exports.getAllProducts = (req, res) => {
         pageTitle: "Admin",
         path: "/admin/products",
         hasProducts: products?.length > 0,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));

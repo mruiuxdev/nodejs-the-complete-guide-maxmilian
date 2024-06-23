@@ -1,15 +1,23 @@
 const path = require("path");
 const express = require("express");
+const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const get404 = require("./controllers/404");
 const mongoose = require("mongoose");
 const User = require("./models/user");
 const dotenv = require("dotenv");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 dotenv.config();
 
 const app = express();
+
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI,
+  collection: "sessions",
+});
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -17,8 +25,21 @@ app.set("views", "./views");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(
+  session({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false,
+    store,
+  })
+);
+
 app.use((req, res, next) => {
-  User.findById("6676c11618f2ca4d1b17f062")
+  if (!req.session.user) {
+    return next();
+  }
+
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
 
@@ -29,6 +50,7 @@ app.use((req, res, next) => {
 
 app.use(adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use(get404);
 

@@ -5,7 +5,6 @@ const {
   getCart,
   postCart,
   deleteCart,
-  getCheckout,
   getOrders,
   postOrders,
 } = require("../controllers/products");
