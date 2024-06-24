@@ -1,7 +1,7 @@
 const Product = require("../models/product");
 
 exports.getAllProducts = (req, res) => {
-  Product.find()
+  Product.find({ userId: req.user._id })
     // .select("-_id")
     // .populate("userId", "username")
     .then((products) => {
@@ -65,19 +65,26 @@ exports.getEditProduct = (req, res) => {
 exports.postEditProduct = (req, res) => {
   const { productId, title, description, price, imageUrl } = req.body;
 
-  Product.findByIdAndUpdate(
-    productId,
-    { title, description, price, imageUrl },
-    { new: true, runValidators: true }
-  )
-    .then(() => res.redirect("/admin/products"))
+  Product.findById(productId)
+    .then((product) => {
+      if (product.userId.toString() !== req.user._id.toString()) {
+        return res.redirect("/");
+      }
+
+      product.title = title;
+      product.description = description;
+      product.price = price;
+      product.imageUrl = imageUrl;
+
+      return product.save().then(() => res.redirect("/admin/products"));
+    })
     .catch((err) => console.log(err));
 };
 
 exports.postDeleteProduct = (req, res) => {
   const { productId } = req.body;
 
-  Product.findByIdAndDelete(productId)
+  Product.deleteOne({ _id: productId, userId: req.user._id })
     .then(() => res.redirect("/admin/products"))
     .catch((err) => console.log(err));
 };

@@ -138,17 +138,20 @@ exports.postReset = (req, res) => {
   crypto.randomBytes(32, (err, buffer) => {
     if (err) {
       console.log(err);
-
       return res.redirect("/auth/reset");
     }
 
+    if (!buffer) {
+      console.log("Failed to generate random bytes");
+      return res.redirect("/auth/reset");
+    }
+    console.log("buffer", buffer);
     const token = buffer.toString("hex");
 
     User.findOne({ email })
       .then((user) => {
         if (!user) {
           req.flash("error", "No account with that email found");
-
           return res.redirect("/auth/reset");
         }
 
@@ -156,22 +159,24 @@ exports.postReset = (req, res) => {
         user.resetTokenExpiration = Date.now() + 3600000;
         return user.save();
       })
-      .then(() => {
-        transporter
-          .sendMail({
-            to: email,
-            from: "mr.uiux.dev@gmail.com",
-            subject: "Password reset",
-            html: `
-                <p>You requested a password</p>
-                <p>Click this <a href="http://localhost:3000/auth/reset/${token}">link</a> to set a new password</p>
-              `,
-          })
-          .catch((err) => console.log(err));
-
-        return res.redirect("/");
+      .then((user) => {
+        return transporter.sendMail({
+          to: email,
+          from: "mr.uiux.dev@gmail.com",
+          subject: "Password reset",
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:3000/auth/reset/${token}">link</a> to set a new password</p>
+          `,
+        });
       })
-      .catch((err) => console.log(err));
+      .then(() => {
+        res.redirect("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.redirect("/auth/reset");
+      });
   });
 };
 
@@ -182,7 +187,7 @@ exports.getNewPassword = (req, res) => {
     resetToken: token,
     resetTokenExpiration: { $gt: Date.now() },
   })
-    .then(() => {
+    .then((user) => {
       res.render("auth/new-password", {
         path: "/auth/new-password",
         pageTitle: "New Password",
@@ -198,25 +203,39 @@ exports.postNewPassword = (req, res) => {
   const { password, userId, passwordToken } = req.body;
   let resetUser;
 
-  User.find({
+  User.findOne({
     resetToken: passwordToken,
     resetTokenExpiration: { $gt: Date.now() },
-    _id: userId,
+    _id: userId.toString(),
   })
     .then((user) => {
+      if (!user) {
+        req.flash("error", "Invalid token or user ID");
+
+        return res.redirect("/auth/reset");
+      }
+
       resetUser = user;
 
-      return bcrypt
-        .hash(password, 12)
-        .then((hashedPassword) => {
-          resetUser.password = hashedPassword;
-          resetUser.resetToken = null;
-          resetUser.resetTokenExpiration = undefined;
-          return resetUser.save();
-        })
-        .then(() => {
-          res.redirect("/auth/login");
-        });
+      return bcrypt.hash(password, 12);
     })
-    .catch((err) => console.log(err));
+    .then((hashedPassword) => {
+      if (!resetUser) {
+        return res.redirect("/auth/reset");
+      }
+
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = null;
+      resetUser.resetTokenExpiration = undefined;
+
+      return resetUser.save();
+    })
+    .then(() => {
+      res.redirect("/auth/login");
+    })
+    .catch((err) => {
+      console.log(err);
+
+      res.redirect("/auth/reset");
+    });
 };
