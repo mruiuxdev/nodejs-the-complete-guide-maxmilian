@@ -5,6 +5,7 @@ exports.getLogin = (req, res) => {
   res.render("auth/login", {
     path: "/auth/login",
     pageTitle: "Login",
+    errorMessage: req.flash("error"),
   });
 };
 
@@ -14,6 +15,8 @@ exports.postLogin = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (!user) {
+        req.flash("error", "Invalid credential");
+
         return res.redirect("/auth/login");
       }
 
@@ -30,7 +33,9 @@ exports.postLogin = (req, res) => {
               return res.redirect("/");
             });
           } else {
-            res.redirect("/auth/login");
+            req.flash("error", "Invalid credential");
+
+            return res.redirect("/auth/login");
           }
         })
         .catch((err) => {
@@ -54,6 +59,7 @@ exports.getSignup = (req, res) => {
   res.render("auth/signup", {
     path: "/auth/signup",
     pageTitle: "Signup",
+    errorMessage: req.flash("error"),
   });
 };
 
@@ -63,6 +69,8 @@ exports.postSignup = (req, res) => {
   User.findOne({ email })
     .then((userDoc) => {
       if (userDoc) {
+        req.flash("error", "Email already exists, please pick a different one");
+
         return res.redirect("/auth/signup");
       }
 
@@ -75,7 +83,13 @@ exports.postSignup = (req, res) => {
             cart: { items: [] },
           });
 
-          return user.save();
+          req.session.isLoggedIn = true;
+          req.session.user = user;
+          req.session.save((err) => {
+            console.log(err);
+
+            return user.save();
+          });
         })
         .then(() => res.redirect("/"));
     })
