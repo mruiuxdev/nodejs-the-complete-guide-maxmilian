@@ -11,7 +11,7 @@
           </div>
           <% } %>
           <form
-            action="/auth/login"
+            action="/auth/new-password"
             method="post"
             class="bg-white p-4 rounded shadow-lg"
           >
@@ -24,21 +24,9 @@
                 id="email"
               />
             </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                name="password"
-                class="form-control"
-                id="password"
-              />
-            </div>
-            <a href="/auth/reset" class="mb-3 d-inline-block text-link"
-              >Reset password?</a
-            >
             <div class="text-center">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-              <button type="submit" class="btn btn-primary">Login</button>
+              <button type="submit" class="btn btn-primary">Reset</button>
             </div>
           </form>
         </div>

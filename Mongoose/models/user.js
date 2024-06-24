@@ -14,6 +14,8 @@ const userSchema = new Schema(
         },
       ],
     },
+    resetToken: String,
+    resetTokenExpiration: Date,
   },
   { timeseries: true, timestamps: true }
 );
