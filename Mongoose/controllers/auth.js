@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
-const user = require("../models/user");
+const { validationResult } = require("express-validator");
 
 dotenv.config();
 
@@ -39,7 +39,6 @@ exports.postLogin = (req, res) => {
       bcrypt
         .compare(password, user.password)
         .then((passwordMatch) => {
-          console.log(passwordMatch);
           if (passwordMatch) {
             req.session.isLoggedIn = true;
             req.session.user = user;
@@ -81,6 +80,19 @@ exports.getSignup = (req, res) => {
 
 exports.postSignup = (req, res) => {
   const { email, password, confirmPassword } = req.body;
+  const errors = validationResult(req);
+
+  console.log(errors.array()[0].msg);
+
+  if (errors.array()) {
+    req.flash("error", errors.array()[0].msg);
+
+    return res.status(422).render("auth/signup", {
+      path: "/auth/signup",
+      pageTitle: "Signup",
+      errorMessage: req.flash("error"),
+    });
+  }
 
   User.findOne({ email })
     .then((userDoc) => {
