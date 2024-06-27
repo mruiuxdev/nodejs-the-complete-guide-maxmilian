@@ -18,32 +18,25 @@
           >
             <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
-              <input
-                type="email"
-                class="form-control"
-                name="email"
-                id="email"
-              />
+              <input type="email" class="form-control <%=
+              validationErrors.find(e => e.path === 'email') ? "border-danger" :
+              "" %>" name="email" id="email" value="<%= oldInput?.email %>" />
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                id="password"
-              />
+              <input type="password" class="form-control <%=
+              validationErrors.find(e => e.path === 'password') ?
+              "border-danger" : "" %>" name="password" id="password" value="<%=
+              oldInput?.password %>" />
             </div>
             <div class="mb-3">
               <label for="confirmPassword" class="form-label"
                 >Confirm Password</label
               >
-              <input
-                type="password"
-                class="form-control"
-                id="confirmPassword"
-                name="confirmPassword"
-              />
+              <input type="password" class="form-control <%=
+              validationErrors.find(e => e.path === 'confirmPassword') ?
+              "border-danger" : "" %>" id="confirmPassword"
+              name="confirmPassword" value="<%= oldInput?.confirmPassword %>" />
             </div>
             <div class="text-center">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
