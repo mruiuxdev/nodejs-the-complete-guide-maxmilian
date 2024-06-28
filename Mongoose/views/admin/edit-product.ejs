@@ -3,6 +3,11 @@
   <body>
     <%- include('../includes/menu.ejs') %>
     <div class="container py-5">
+      <% if (errorMessage.length > 0) { %>
+      <div class="alert alert-danger mb-3" role="alert">
+        <%= errorMessage %>
+      </div>
+      <% } %>
       <form
         action="/admin/<%if (edit) { %>edit-product<% } else { %>add-product<% } %>"
         method="POST"
@@ -11,13 +16,10 @@
           <div class="col-md-6 mb-3">
             <div class="form-group">
               <label for="title" class="form-label">Title</label>
-              <input
-                type="text"
-                name="title"
-                id="title"
-                value="<% if (edit) { %><%= product.title %><% } %>"
-                class="form-control"
-              />
+              <input type="text" name="title" id="title" value="<% if (edit ||
+              hasError) { %><%= oldInput?.title %><% } %>" class="form-control
+              <%= validationErrors.find(e => e.path === "title") ?
+              "border-danger" : "" %>" />
             </div>
           </div>
           <div class="col-md-6 mb-3">
@@ -28,7 +30,8 @@
                 name="price"
                 id="price"
                 step="0.01"
-                value="<% if (edit) { %><%= product.price %><% } %>"
+                value="<% if (edit ||
+                hasError) { %><%= oldInput?.price %><% } %>"
                 class="form-control"
               />
             </div>
@@ -40,7 +43,8 @@
                 type="text"
                 name="imageUrl"
                 id="imageUrl"
-                value="<% if (edit) { %><%= product.imageUrl %><% } %>"
+                value="<% if (edit ||
+                hasError) { %><%= oldInput?.imageUrl %><% } %>"
                 class="form-control"
               />
             </div>
@@ -55,7 +59,8 @@
               id="description"
               class="form-control"
             >
-<% if (edit) { %><%= product.description %><% } %></textarea
+<% if (edit ||
+hasError) { %><%= oldInput?.description %><% } %></textarea
             >
           </div>
         </div>
