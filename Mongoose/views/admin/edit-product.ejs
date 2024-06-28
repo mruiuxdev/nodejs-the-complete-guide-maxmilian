@@ -16,10 +16,10 @@
           <div class="col-md-6 mb-3">
             <div class="form-group">
               <label for="title" class="form-label">Title</label>
-              <input type="text" name="title" id="title" value="<% if (edit ||
-              hasError) { %><%= oldInput?.title %><% } %>" class="form-control
-              <%= validationErrors.find(e => e.path === "title") ?
-              "border-danger" : "" %>" />
+              <input type="text" name="title" id="title" value="<%= (hasError ||
+              edit) && oldInput?.title %>" class="form-control <%=
+              validationErrors.find(e => e.path === "title") ? "border-danger" :
+              "" %>" />
             </div>
           </div>
           <div class="col-md-6 mb-3">

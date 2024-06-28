@@ -18,7 +18,7 @@ router.get("/admin/add-product", isAuth, getAddProduct);
 router.post(
   "/admin/add-product",
   [
-    body("title").isAlphanumeric().isLength({ min: 3 }).trim(),
+    body("title").isString().isLength({ min: 5 }),
     body("imageUrl").isURL(),
     body("price").isFloat(),
     body("description").isLength({ min: 5, max: 400 }).trim(),
@@ -32,7 +32,7 @@ router.post(
   "/admin/edit-product",
   isAuth,
   [
-    body("title").isString().isLength({ min: 3 }).trim(),
+    body("title").isString().isLength({ min: 5 }),
     body("price").isFloat(),
     body("imageUrl").isURL(),
     body("description").isLength({ min: 5, max: 400 }).trim(),

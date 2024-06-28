@@ -21,7 +21,7 @@ exports.getAddProduct = (req, res) => {
     pageTitle: "Add product",
     path: "/admin/add-product",
     edit: false,
-    hasError: false,
+    hasError: true,
     errorMessage: req.flash("error"),
     oldInput: { title: "", price: "", imageUrl: "", description: "" },
     validationErrors: [],
@@ -29,9 +29,9 @@ exports.getAddProduct = (req, res) => {
 };
 
 exports.postAddProduct = (req, res) => {
-  const { title, price, description, imageUrl } = req.body;
+  const { title, price, imageUrl, description } = req.body;
   const errors = validationResult(req);
-
+  console.log(errors.array());
   if (!errors.isEmpty()) {
     req.flash("error", errors.array()[0]?.path);
 
@@ -39,7 +39,7 @@ exports.postAddProduct = (req, res) => {
       pageTitle: "Add product",
       path: "/admin/add-product",
       edit: false,
-      hasError: false,
+      hasError: true,
       errorMessage: req.flash("error"),
       oldInput: { title, price, imageUrl, description },
       validationErrors: errors.array(),
@@ -77,9 +77,14 @@ exports.getEditProduct = (req, res) => {
         pageTitle: "Edit product",
         path: "/admin/edit-product",
         edit,
-        hasError,
+        hasError: true,
         errorMessage: req.flash("error"),
-        oldInput: { title: "", price: "", imageUrl: "", description: "" },
+        oldInput: {
+          title: product?.title || "",
+          price: product?.price || null,
+          imageUrl: product?.imageUrl || "",
+          description: product?.description || "",
+        },
         validationErrors: [],
       });
     })
@@ -97,7 +102,7 @@ exports.postEditProduct = (req, res) => {
       pageTitle: "Edit product",
       path: "/admin/edit-product",
       edit: true,
-      hasError,
+      hasError: true,
       errorMessage: req.flash("error"),
       oldInput: { title, price, imageUrl, description },
       validationErrors: errors.array(),
