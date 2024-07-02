@@ -13,7 +13,13 @@ exports.getAllProducts = async (req, res) => {
         csrfToken: req.csrfToken(),
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };
 
 exports.getProductDetails = (req, res) => {
@@ -27,7 +33,13 @@ exports.getProductDetails = (req, res) => {
         path: "/shop/product-details",
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };
 
 exports.getCart = (req, res, next) => {
@@ -43,7 +55,13 @@ exports.getCart = (req, res, next) => {
           products: user.cart.items,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   }
 };
 
@@ -56,7 +74,13 @@ exports.postCart = (req, res) => {
     Product.findById(productId)
       .then((product) => req.user.addToCart(product))
       .then(() => res.redirect("/shop/cart"))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   }
 };
 
@@ -66,7 +90,13 @@ exports.deleteCart = (req, res) => {
   req.user
     .removeFromCart(productId)
     .then(() => res.redirect("/shop/cart"))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };
 
 exports.getOrders = (req, res) => {
@@ -81,7 +111,13 @@ exports.getOrders = (req, res) => {
           orders,
         })
       )
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   }
 };
 
@@ -102,5 +138,11 @@ exports.postOrders = (req, res) => {
     })
     .then(() => req.user.clearCart())
     .then(() => res.redirect("/shop/orders"))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };

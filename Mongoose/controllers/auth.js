@@ -80,7 +80,13 @@ exports.postLogin = (req, res) => {
           res.redirect("/auth/login");
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };
 
 exports.postLogout = (req, res) => {
@@ -134,18 +140,26 @@ exports.postSignup = (req, res) => {
         return user.save();
       });
     })
-    .then(() => {
-      return transporter
-        .sendMail({
+    .then(async () => {
+      try {
+        return await transporter.sendMail({
           to: email,
           from: "mr.uiux.dev@gmail.com",
           subject: "Shop Nodejs",
           html: "<h1>You successfully signed up!!!</h1>",
-        })
-        .catch((err) => console.log(err));
+        });
+      } catch (err) {
+        return console.log(err);
+      }
     })
     .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };
 
 exports.getReset = (req, res) => {
@@ -198,8 +212,11 @@ exports.postReset = (req, res) => {
         res.redirect("/");
       })
       .catch((err) => {
-        console.log(err);
-        res.redirect("/auth/reset");
+        const error = new Error(err);
+
+        error.httpStatusCode = 500;
+
+        return next(error);
       });
   });
 };
@@ -220,7 +237,13 @@ exports.getNewPassword = (req, res) => {
         passwordToken: token,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+
+      error.httpStatusCode = 500;
+
+      return next(error);
+    });
 };
 
 exports.postNewPassword = (req, res) => {
@@ -258,8 +281,10 @@ exports.postNewPassword = (req, res) => {
       res.redirect("/auth/login");
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
 
-      res.redirect("/auth/reset");
+      error.httpStatusCode = 500;
+
+      return next(error);
     });
 };
